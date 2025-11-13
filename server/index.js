@@ -1,0 +1,49 @@
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+// const connectDB = require('./config/db');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// MongoDB disabled - using in-memory storage
+console.log('⚠️  Running without MongoDB - using in-memory storage');
+
+// Middleware
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+  'https://gymtracker-pro.vercel.app', // Update this with your actual frontend URL
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all for development
+    }
+  },
+  credentials: true
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Routes - use simple in-memory auth
+app.use('/api/auth', require('./routes/auth-simple'));
+app.use('/api/workouts', require('./routes/workouts'));
+app.use('/api/exercises', require('./routes/exercises'));
+app.use('/api/progress', require('./routes/progress'));
+app.use('/api/records', require('./routes/records-simple'));
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'GymTracker Pro API is running' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
