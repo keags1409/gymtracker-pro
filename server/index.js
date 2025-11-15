@@ -10,22 +10,12 @@ const PORT = process.env.PORT || 5000;
 // MongoDB disabled - using in-memory storage
 console.log('⚠️  Running without MongoDB - using in-memory storage');
 
-// Middleware
-const allowedOrigins = [
-  'http://localhost:3000',
-  process.env.FRONTEND_URL,
-  'https://gymtracker-pro.vercel.app', // Update this with your actual frontend URL
-];
-
+// Middleware - Allow all origins for now
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, true); // Allow all for development
-    }
-  },
-  credentials: true
+  origin: '*',
+  credentials: false,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
