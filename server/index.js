@@ -41,10 +41,9 @@ app.use('/api/records', require('./routes/records-simple'));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'GymTracker Pro API is running' });
 });
+
 app.listen(PORT, '0.0.0.0', () => {
-app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
-
