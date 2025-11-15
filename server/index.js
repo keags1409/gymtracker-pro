@@ -36,14 +36,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'GymTracker Pro API is running' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
+// 404 handler
+app.use((req, res) => {
+  console.log('404:', req.method, req.url);
+  res.status(404).json({ error: 'Route not found' });
 });
 
-// Error handling middleware
+// Error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ error: err.message });
+  res.status(500).json({ error: err.message || 'Internal server error' });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
