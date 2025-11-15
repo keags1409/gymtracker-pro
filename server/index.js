@@ -27,7 +27,11 @@ app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/progress', require('./routes/progress'));
 app.use('/api/records', require('./routes/records-simple'));
 
-// Health check
+// Health checks
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'GymTracker Pro API is running' });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'GymTracker Pro API is running' });
 });
