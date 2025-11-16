@@ -1,14 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-// const connectDB = require('./config/db');
+const { connectDB } = require('./config/database');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// MongoDB disabled - using in-memory storage
-console.log('⚠️  Running without MongoDB - using in-memory storage');
+// Connect to PostgreSQL (falls back to in-memory if no DATABASE_URL)
+if (process.env.DATABASE_URL) {
+  connectDB();
+} else {
+  console.log('⚠️  Running without PostgreSQL - using in-memory storage');
+}
 
 // Middleware - Allow all origins for now
 app.use(cors({
@@ -20,8 +24,8 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes - use simple in-memory auth
-app.use('/api/auth', require('./routes/auth-simple'));
+// Routes - use PostgreSQL-enabled routes
+app.use('/api/auth', require('./routes/auth-postgres'));
 app.use('/api/workouts', require('./routes/workouts'));
 app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/progress', require('./routes/progress'));
